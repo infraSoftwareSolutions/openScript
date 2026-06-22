@@ -1,0 +1,62 @@
+```powershell
+# LIBRARY OVERVIEW
+================---
+This library provides a set of functions and classes for organizing and man[3D[K
+managing the build process.
+
+OBJECTS & DATA STRUCTURES
+=========================
+
+### Objects & Data Structures
+
+#### Classes
+
+*   `Build`: Represents the overall build process.
+    -   Properties:
+        *   `projectPath`: The path to the project directory.
+        *   `language`: The programming language used in the project.
+        *   `compiler`: The compiler being used.
+        *   `includePaths` and `sourcePaths`: Collections of include paths [K
+and source files, respectively.
+    -   Methods:
+        *   `[void] SetProjectName(string $name)`: Sets the name of the pro[3D[K
+project.
+        *   `[string] GetProjectName()`: Returns the current project name.
+        *   `[void] SetLanguage(string $lang)`: Sets the programming langua[6D[K
+language used in the project.
+        *   `[string] GetLanguage()`: Returns the current programming langu[5D[K
+language used in the project.
+        *   `[void] SetCompiler(string $compiler)`: Sets the compiler being[5D[K
+being used.
+        *   `[string] GetCompiler()`: Returns the current compiler being us[2D[K
+used.
+    -   Methods:
+        *   `[void] AddIncludePath(string $path)`: Adds an include path to [K
+the `includePaths` collection.
+        *   `[string[]] GetIncludePaths()`: Returns a collection of include[7D[K
+included file paths.
+        *   `[void] AddSourcePath(string $path)`: Adds a source file to the[3D[K
+the `sourcePaths` collection.
+        *   `[string[]] GetSourcePaths()`: Returns a collection of source f[1D[K
+files.
+        *   `[void] mini_version(double $version)`: Sets the minimum versio[6D[K
+version number for the build process.
+        *   `[double] GetMiniVersion()`: Returns the current minimum versio[6D[K
+version number for the build process.
+        *   `[double] GetVersion()`: Returns the current version number for[3D[K
+for the build process.
+        *   `[string] GetOS()`: Returns the current operating system.
+
+#### Functions
+
+*   `Build()`: The main entry point of the build process.
+    -   Parameters:
+        *   None
+    -   Returns: None
+    -   Notes: This function is responsible for managing the entire build p[1D[K
+process, including project setup, compilation, and execution.
+
+### Structs
+
+None.
+

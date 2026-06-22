@@ -64,7 +64,7 @@ function Invoke-AutoDoc {
 
         [switch]$Recurse,
 
-        [string[]]$Extensions = @('.cpp', '.c', '.h', '.hpp', '.java', '.ps1', '.psm1', '.py', '.cs', '.js', '.ts'),
+        [string[]]$Extensions = @('.cpp', '.c', '.h', '.hpp', '.java', '.ps1', '.psm1', '.py', '.cs', '.js', '.ts', '.bash'),
 
         [switch]$Force
     )
@@ -279,7 +279,7 @@ $code
     $item = Get-Item $Path
     if (-not $item.PSIsContainer) {
         # Single file
-        Document-File -FilePath $item.FullName -OutputFormat $OutputFormat -OutputDir $OutputDir -Force $Force
+        DocumentFile -FilePath $item.FullName -OutputFormat $OutputFormat -OutputDir $OutputDir -Force $Force
     } else {
         # Folder
         $getParams = @{
@@ -295,7 +295,7 @@ $code
         }
 
         foreach ($file in $files) {
-            Document-File -FilePath $file.FullName -OutputFormat $OutputFormat -OutputDir $OutputDir -Force $Force
+            DocumentFile -FilePath $file.FullName -OutputFormat $OutputFormat -OutputDir $OutputDir -Force $Force
         }
     }
 

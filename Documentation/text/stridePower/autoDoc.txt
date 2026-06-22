@@ -1,0 +1,41 @@
+Here is the professional plain text documentation for the provided PowerShe[8D[K
+PowerShell code:
+```
+# Library Overview
+================================
+This library/file provides a PowerShell module that generates documentation[13D[K
+documentation (TXT, MD, Doxygen) for code files using Ollama.
+
+Object: ObjectName
+------------------
+Description of what this object represents and its purpose.
+Members:
+  - member_name (type): What this member stores/does.
+  - another_member (type): Description
+
+Functions
+=========
+For each function/procedure in the module:
+Function: function_name(parameters)
+-------------------------------------
+Purpose: Clear explanation of what the function does.
+
+Parameters:
+- param1 (type): Description of this parameter.
+- param2 (type): Description of this parameter.
+
+Returns: Description of return value and type.
+
+Notes: Any important considerations, edge cases, or usage tips.
+Rules for the output:
+- Use plain ASCII text only, no special formatting.
+- Clearly separate sections with lines of equals/dashes.
+- Be descriptive and professional.
+- Include all objects and functions found in the code.
+- Explain what each component does and how to use it.
+- Note any important limitations or requirements.
+
+Code
+================
+```
+

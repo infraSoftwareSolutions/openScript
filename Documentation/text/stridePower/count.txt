@@ -1,0 +1,58 @@
+This is a PowerShell script that provides several functions for counting li[2D[K
+lines of code, files by extension, and smart line counters. Here's a breakd[6D[K
+breakdown of the main functions:
+
+1. `Measure-CodeLines`: Counts the total number of lines of code in all fil[3D[K
+files in the current directory.
+2. `Quick-CountLines`: A more lightweight version of `Measure-CodeLines` th[2D[K
+that only counts lines of code from the current file or a specified input s[1D[K
+string.
+3. `Get-FileLinesByExtension`: Returns an array of file names and line coun[4D[K
+count for each file with a specific extension (e.g., `.py`, `.java`, etc.).[6D[K
+etc.).
+4. `CountSmartLines`: A smart line counter that excludes empty lines,[6D[K
+lines, single-line comments, multi-line comments, and string delimiters.
+5. `Resolve-TargetPath`: Resolves the input path to its full absolute path.[5D[K
+path.
+
+Here's some sample code:
+```powershell
+# Measure code lines in all files in the current directory
+Measure-CodeLines
+
+# Get lines of code for a single file (e.g., "example.py")
+Get-FileLinesByExtension -FilePath "example.py"
+
+# Count smart lines from the current file or a specified input string
+$lines = CountSmartLines -InputString "def example_function():"
+Write-Host $lines.Count
+
+# Get files by extension (e.g., .py, .java, etc.)
+Get-FileLinesByExtension -FilePath ".\example"
+
+# Resolve an absolute path to its full path
+Resolve-TargetPath -Path "\path\to\your\file.txt"
+```
+To use these functions, simply import the script and call the desired funct[5D[K
+function:
+```powershell
+# Import the script module
+Import-Module "Quick-CountLines.ps1"
+
+# Count code lines in all files in the current directory
+Measure-CodeLines
+
+# Get lines of code for a single file (e.g., "example.py")
+Get-FileLinesByExtension -FilePath "example.py"
+
+# Count smart lines from the current file or a specified input string
+$lines = CountSmartLines -InputString "def example_function():"
+Write-Host $lines.Count
+
+# Get files by extension (e.g., .py, .java, etc.)
+Get-FileLinesByExtension -FilePath ".\example"
+
+# Resolve an absolute path to its full path
+Resolve-TargetPath -Path "\path\to\your\file.txt"
+```
+

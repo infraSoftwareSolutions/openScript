@@ -414,7 +414,7 @@ function Get-FileSizeTotal {
     Intelligent line counter that excludes:
     - Empty lines
     - Single-line comments (// # )
-    - Multi-line comments /* */ <# #> """"""
+    - Multi-line comments /* */ """"""
     Supports C, C++, C#, Java, JavaScript, TypeScript, Python, PowerShell
 
 .PARAMETER Paths

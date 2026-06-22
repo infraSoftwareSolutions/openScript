@@ -1,0 +1,90 @@
+**PowerTest.psm1**
+================
+
+A PowerShell module for generating comprehensive test cases.
+
+**Function Documentation**
+-------------------------
+
+### New-Test
+---------------
+
+Generates production-quality, comprehensive test cases for a given library.[8D[K
+library. This function uses the `Test-Path` cmdlet to check if the document[8D[K
+documentation and library code exist, and then builds a detailed user promp[5D[K
+prompt with testing frameworks specified by the user.
+
+**Parameter Values**
+
+* `Docs`: The path to the documentation file.
+* `Lib`: The path to the library code file.
+* `Out`: The output directory for the generated test cases (optional).
+* `AI`: The URL of the API endpoint for generating tests (required).
+* `Language`, `Framework`, and `Existing` are optional parameters:
+	+ `Language`: The programming language for which to generate tests. Default[7D[K
+Default is `C#`.
+	+ `Framework`: The testing framework to use. Default is one of `CTest`, `GT[3D[K
+`GTest`, `Jest`, `Pytest`, `NUnit`, or `unittest`.
+	+ `Existing`: Whether to include existing tests from a specified library (o[2D[K
+(optional). Default is `$false`.
+
+**Example Usage**
+-----------------
+
+```powershell
+New-Test -Docs "C:\Path\To/Documents" -Lib "C:\Path\To\Libraries"
+```
+
+This command generates comprehensive test cases for the C# language using t[1D[K
+the `CTest` framework.
+
+### Get-FrameworkSpecificPrompt
+------------------------------
+
+Gets a detailed user prompt with testing frameworks specified by the user. [K
+This function is similar to `New-Test`, but it does not generate complete, [K
+executable test code.
+
+**Parameter Values**
+
+* `Framework`: The testing framework to use.
+* `Language` and `Existing` are optional parameters:
+	+ `Language`: The programming language for which to generate tests. Default[7D[K
+Default is `$false`.
+	+ `Existing`: Whether to include existing tests from a specified library (o[2D[K
+(optional). Default is `$false`.
+
+**Example Usage**
+-----------------
+
+```powershell
+Get-FrameworkSpecificPrompt -Framework "Jest" -Language "Python"
+```
+
+This command generates a comprehensive test case for the Python language us[2D[K
+using the Jest framework.
+
+**Testing Philosophy**
+----------------------
+
+The `New-Test` and `Get-FrameworkSpecificPrompt` functions follow these gui[3D[K
+guidelines:
+
+* Write tests that are clear, maintainable, and easy to understand.
+* Use descriptive assertion messages that explain what went wrong.
+* Include at least one positive test per function.
+* Include at least one edge case test per function.
+* Test error conditions and exception handling when applicable.
+
+**Output**
+------------
+
+The generated test code is saved in the specified output directory. The fil[3D[K
+file name is based on the current date and time, and it includes a suffix t[1D[K
+to indicate that it is a new test.
+
+Note: This module is designed to be used with Ollama API for generating tes[3D[K
+tests. To use this module, you need to install the `Ollama` PowerShell modu[4D[K
+module and specify the correct API endpoint URL when calling these function[8D[K
+functions.
+

@@ -1,4 +1,4 @@
-Import-Module .\powerTools\powerBuild.psm1
-Import-Module .\powerTools\powerCount.psm1
-Import-Module .\powerTools\powerDoc.psm1
-Import-Module .\powerTools\powerTest.psm1
+Import-Module .\stridePower\build.psm1
+Import-Module .\stridePower\count.psm1
+Import-Module .\stridePower\doc.psm1
+Import-Module .\stridePower\test.psm1

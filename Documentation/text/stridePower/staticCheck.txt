@@ -1,0 +1,13 @@
+staticCheck.bash
+
+    brief: is a bash shell library that provided preformated commands to make the static checking for libraries easer.
+
+    function(ccheck_lib):
+        perimeter: include_dir -> for the include file and include libraries.
+        perimeter: target_dir -> the directory to check or file.
+        note: this function uses cppcheck to check the c code and it uses also the c - std - 11 for checking.
+    
+    function(cppcheck_lib):
+        perimeter: include_dir -> for the include file and include libraries.
+        perimeter: target_dir -> the directory to check or file.
+        note: this function uses cppcheck to check the c++ code and it uses also the c++ - std - 20 for checking.

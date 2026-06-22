@@ -1,0 +1,3 @@
+strideKit is a collection of PowerShell and Bash modules that provides practical tools for automating common development tasks.
+It includes utilities for project analysis, build automation, and integration with local AI models such as Ollama to assist with documentation and testing.
+The overall goal is to make everyday workflows faster through simple and practical solutions.
