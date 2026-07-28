@@ -33,7 +33,7 @@ param(
 )
 
 # ===================== Global Settings =====================
-$script:Version = "beta 0.0.1"
+$script:Version = "beta 0.0.3"
 $script:LicenseFile = Join-Path -Path $PSScriptRoot -ChildPath "Documentation/lic.txt"
 $script:DocRoot = "Documentation/text"
 $script:briefFile = "Documentation/brief.txt"

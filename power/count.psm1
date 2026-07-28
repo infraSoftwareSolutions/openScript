@@ -4,13 +4,137 @@
 # Helper function to resolve relative paths to absolute paths
 function Resolve-TargetPath {
     param([string]$Path)
-
-    if ([System.IO.Path]::IsPathRooted($Path)) {
-        return $Path
+    if ([string]::IsNullOrWhiteSpace($Path)) {
+        return (Get-Location).ProviderPath
     }
 
-    $currentLocation = Get-Location
+    # If already absolute, return as-is
+    if ([System.IO.Path]::IsPathRooted($Path)) {
+        return (Get-Item -LiteralPath $Path).FullName
+    }
+
+    $currentLocation = (Get-Location).ProviderPath
+
+    # If user passed '.' return current location
+    if ($Path -in @('.', './', '.\\')) {
+        return $currentLocation
+    }
+
+    # If the path matches the current folder name, treat it as current location
+    try {
+        $currentName = [System.IO.Path]::GetFileName($currentLocation)
+        if ($Path -eq $currentName) {
+            return $currentLocation
+        }
+    } catch {
+        # ignore
+    }
+
+    # If the relative path (as given) exists from current location, return its full path
+    if (Test-Path -LiteralPath $Path) {
+        return (Get-Item -LiteralPath $Path).FullName
+    }
+
+    # Fallback: join with current location
     return Join-Path -Path $currentLocation -ChildPath $Path
+}
+
+function CountAllLines {
+    <#
+    .SYNOPSIS
+        Count all lines for common source and text file types
+    .DESCRIPTION
+        Counts every line in files with extensions: .txt .md .c .cpp .py .java .h .hpp .tpp .bash .sh .ps1 .psm1
+        Accepts one or more paths (files or directories).
+    .PARAMETER Paths
+        One or more paths to files or directories to count.
+    .EXAMPLE
+        CountAllLines -Paths @('src','docs')
+    #>
+    param(
+        [Parameter(Mandatory=$true, ValueFromPipeline=$true)]
+        [string[]]$Paths,
+
+        [string[]]$Extensions = @('.txt','.md','.c','.cpp','.py','.java','.h','.hpp','.tpp','.bash','.sh','.ps1','.psm1')
+    )
+
+    begin {
+        $totalLines = 0
+        $fileCount = 0
+        $results = @()
+        $pathList = @()
+        foreach ($p in $Paths) {
+            $pathList += Resolve-TargetPath $p
+        }
+    }
+
+    process {
+        foreach ($targetPath in $pathList) {
+            if (-not (Test-Path $targetPath)) {
+                Write-Warning "Path not found: $targetPath"
+                continue
+            }
+
+            if ((Get-Item $targetPath) -is [System.IO.FileInfo]) {
+                $file = Get-Item $targetPath
+                if ($Extensions.Contains($file.Extension)) {
+                    $content = Get-Content $file.FullName -Raw -ErrorAction SilentlyContinue
+                    $lineCount = if ($null -eq $content) { 0 } else { @($content -split "`n").Count }
+
+                    $results += [PSCustomObject]@{
+                        Name = $file.Name
+                        Path = $file.FullName
+                        Lines = $lineCount
+                        Type = 'File'
+                    }
+
+                    $totalLines += $lineCount
+                    $fileCount++
+                }
+            }
+            elseif ((Get-Item $targetPath) -is [System.IO.DirectoryInfo]) {
+                $files = Get-ChildItem -Path $targetPath -Recurse -File | Where-Object { $Extensions.Contains($_.Extension) }
+
+                foreach ($file in $files) {
+                    $content = Get-Content $file.FullName -Raw -ErrorAction SilentlyContinue
+                    $lineCount = if ($null -eq $content) { 0 } else { @($content -split "`n").Count }
+
+                    $results += [PSCustomObject]@{
+                        Name = $file.Name
+                        Path = $file.FullName
+                        Lines = $lineCount
+                        Type = 'File'
+                    }
+
+                    $totalLines += $lineCount
+                    $fileCount++
+                }
+            }
+        }
+    }
+
+    end {
+        if ($results.Count -gt 0) {
+            Write-Host "`n╔════════════════════════════════════════════════════════╗" -ForegroundColor Cyan
+            Write-Host "║                   All Lines Report                    ║" -ForegroundColor Cyan
+            Write-Host "╠════════════════════════════════════════════════════════╣" -ForegroundColor Cyan
+
+            foreach ($result in $results) {
+                $displayPath = if ($result.Path.Length -gt 45) { "..." + $result.Path.Substring($result.Path.Length - 42) } else { $result.Path }
+                Write-Host ("║ {0,-43} {1,8} ║" -f $displayPath, $result.Lines) -ForegroundColor Green
+            }
+
+            Write-Host "╠════════════════════════════════════════════════════════╣" -ForegroundColor Cyan
+            Write-Host ("║ Total Files: {0,-39} {1,8} ║" -f $fileCount, " ") -ForegroundColor Yellow
+            Write-Host ("║ Total Lines: {0,-39} {1,8} ║" -f " ", $totalLines) -ForegroundColor Yellow
+            Write-Host "╚════════════════════════════════════════════════════════╝" -ForegroundColor Cyan
+
+            return @{ TotalLines = $totalLines; FileCount = $fileCount; Details = $results }
+        }
+        else {
+            Write-Warning "No matching files found for extensions: $($Extensions -join ', ')"
+        }
+    }
 }
 
 <#
@@ -39,7 +163,7 @@ function CountCodeLines {
         [Parameter(Mandatory=$true, ValueFromPipeline=$true)]
         [string[]]$Paths,
 
-        [string[]]$Extensions = @('.cpp', '.c', '.h', '.hpp', '.ps1', '.psm1', '.py', '.cs', '.java', '.js', '.ts')
+        [string[]]$Extensions = @('.cpp', '.c', '.h', '.hpp', '.ps1', '.psm1', '.py', '.cs', '.java', '.js', '.ts', '.sh', '.bash')
     )
 
     begin {
@@ -638,10 +762,5 @@ function CountSmartLines {
     }
 }
 
-# Create aliases for backward compatibility
-New-Alias -Name Quick-CountLines -Value Measure-CodeLines -Force
-New-Alias -Name Count-FilesByExtension -Value Measure-FilesByExtension -Force
-New-Alias -Name Smart-Count -Value CountSmartLines -Force
-
 # Export functions
-Export-ModuleMember -Function @('CountCodeLines', 'Measure-CodeLines', 'Measure-FilesByExtension', 'Get-FileSizeTotal', 'CountSmartLines', 'Resolve-TargetPath') -Alias @('Quick-CountLines', 'Count-FilesByExtension', 'Smart-Count')
+Export-ModuleMember -Function @('CountAllLines', 'CountCodeLines', 'Measure-CodeLines', 'Measure-FilesByExtension', 'Get-FileSizeTotal', 'CountSmartLines', 'Resolve-TargetPath')
