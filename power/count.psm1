@@ -39,6 +39,102 @@ function Resolve-TargetPath {
     return Join-Path -Path $currentLocation -ChildPath $Path
 }
 
+function CountDiagramsLines {
+    <#
+    .SYNOPSIS
+        Count all lines for common source and text file types
+    .DESCRIPTION
+        Counts every line in files with extensions: .txt .md .c .cpp .py .java .h .hpp .tpp .bash .sh .ps1 .psm1
+        Accepts one or more paths (files or directories).
+    .PARAMETER Paths
+        One or more paths to files or directories to count.
+    .EXAMPLE
+        CountDiagramsLines -Paths @('src','docs')
+    #>
+    param(
+        [Parameter(Mandatory=$true, ValueFromPipeline=$true)]
+        [string[]]$Paths,
+
+        [string[]]$Extensions = @('.dig')
+    )
+
+    begin {
+        $totalLines = 0
+        $fileCount = 0
+        $results = @()
+    }
+
+    process {
+        foreach ($p in $Paths) {
+            $targetPath = Resolve-TargetPath $p
+
+            if (-not (Test-Path $targetPath)) {
+                Write-Warning "Path not found: $targetPath"
+                continue
+            }
+
+            if ((Get-Item $targetPath) -is [System.IO.FileInfo]) {
+                $file = Get-Item $targetPath
+                if ($Extensions.Contains($file.Extension)) {
+                    $content = Get-Content $file.FullName -Raw -ErrorAction SilentlyContinue
+                    $lineCount = if ($null -eq $content) { 0 } else { @($content -split "`n").Count }
+
+                    $results += [PSCustomObject]@{
+                        Name = $file.Name
+                        Path = $file.FullName
+                        Lines = $lineCount
+                        Type = 'File'
+                    }
+
+                    $totalLines += $lineCount
+                    $fileCount++
+                }
+            }
+            elseif ((Get-Item $targetPath) -is [System.IO.DirectoryInfo]) {
+                $files = Get-ChildItem -Path $targetPath -Recurse -File | Where-Object { $Extensions.Contains($_.Extension) }
+
+                foreach ($file in $files) {
+                    $content = Get-Content $file.FullName -Raw -ErrorAction SilentlyContinue
+                    $lineCount = if ($null -eq $content) { 0 } else { @($content -split "`n").Count }
+
+                    $results += [PSCustomObject]@{
+                        Name = $file.Name
+                        Path = $file.FullName
+                        Lines = $lineCount
+                        Type = 'File'
+                    }
+
+                    $totalLines += $lineCount
+                    $fileCount++
+                }
+            }
+        }
+    }
+
+    end {
+        if ($results.Count -gt 0) {
+            Write-Host "`n╔════════════════════════════════════════════════════════╗" -ForegroundColor Cyan
+            Write-Host "║                   Diagrams Lines Report                    ║" -ForegroundColor Cyan
+            Write-Host "╠════════════════════════════════════════════════════════╣" -ForegroundColor Cyan
+
+            foreach ($result in $results) {
+                $displayPath = if ($result.Path.Length -gt 45) { "..." + $result.Path.Substring($result.Path.Length - 42) } else { $result.Path }
+                Write-Host ("║ {0,-43} {1,8} ║" -f $displayPath, $result.Lines) -ForegroundColor Green
+            }
+
+            Write-Host "╠════════════════════════════════════════════════════════╣" -ForegroundColor Cyan
+            Write-Host ("║ Total Files: {0,-39} {1,8} ║" -f $fileCount, " ") -ForegroundColor Yellow
+            Write-Host ("║ Total Lines: {0,-39} {1,8} ║" -f " ", $totalLines) -ForegroundColor Yellow
+            Write-Host "╚════════════════════════════════════════════════════════╝" -ForegroundColor Cyan
+
+            return @{ TotalLines = $totalLines; FileCount = $fileCount; Details = $results }
+        }
+        else {
+            Write-Warning "No matching files found for extensions: $($Extensions -join ', ')"
+        }
+    }
+}
+
 function CountAllLines {
     <#
     .SYNOPSIS
@@ -763,4 +859,4 @@ function CountSmartLines {
 }
 
 # Export functions
-Export-ModuleMember -Function @('CountAllLines', 'CountCodeLines', 'Measure-CodeLines', 'Measure-FilesByExtension', 'Get-FileSizeTotal', 'CountSmartLines', 'Resolve-TargetPath')
+Export-ModuleMember -Function @('CountDiagramsLines', 'CountAllLines', 'CountCodeLines', 'Measure-CodeLines', 'Measure-FilesByExtension', 'Get-FileSizeTotal', 'CountSmartLines', 'Resolve-TargetPath')

@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-    strideCore - Retrieve version, license, help, or library documentation.
+    infoSystemCore - Retrieve version, license, help, or library documentation.
 
 .DESCRIPTION
     This script accepts a command and an optional path.
@@ -16,11 +16,11 @@
     Optional library path for --help command
 
 .EXAMPLE
-    .\stride.ps1 --version
-    .\stride.ps1 --license
-    .\stride.ps1 --help
-    .\stride.ps1 --help cgen\micros.h
-    .\stride.ps1 --help cgen/UnitTest.h
+    .\infoSystem.ps1 --version
+    .\infoSystem.ps1 --license
+    .\infoSystem.ps1 --help
+    .\infoSystem.ps1 --help power/count.psm1
+    .\infoSystem.ps1 --help bash/autoDoc.sh
 #>
 
 param(
@@ -33,15 +33,15 @@ param(
 )
 
 # ===================== Global Settings =====================
-$script:Version = "beta 0.0.3"
-$script:LicenseFile = Join-Path -Path $PSScriptRoot -ChildPath "Documentation/lic.txt"
+$script:Version = "beta 0.0.5"
+$script:LicenseFile = Join-Path -Path $PSScriptRoot -ChildPath "LICENSE"
 $script:DocRoot = "Documentation/text"
 $script:briefFile = "Documentation/brief.txt"
 
 # ===================== Helper Functions =====================
 
 function Show-Version {
-    Write-Host "strideKit version $script:Version" -ForegroundColor Green
+    Write-Host "openScript version $script:Version" -ForegroundColor Green
 }
 
 function Show-License {
@@ -69,14 +69,14 @@ function Show-Brief {
 function Show-Help {
     $helpText = @"
 ===========================================
-        strideCore - Information System
+        infoSystemCore - Information System
 ===========================================
 
 Usage:
-    .\stride.ps1 --version
-    .\stride.ps1 --license
-    .\stride.ps1 --help
-    .\stride.ps1 --help <path>
+    .\infoSystem.ps1 --version
+    .\infoSystem.ps1 --license
+    .\infoSystem.ps1 --help
+    .\infoSystem.ps1 --help <path>
 
 Options:
     --version               : Show script version.
@@ -88,8 +88,8 @@ Options:
                               Documentation/text/<path_without_extension>.txt
 
 Examples:
-    .\stride.ps1 --help strideKit/count.psm1
-    .\stride.ps1 --help staticCheck.bash
+    .\infoSystem.ps1 --help openScript/count.psm1
+    .\infoSystem.ps1 --help staticCheck.bash
 
 Note:
     - The documentation root folder is 'Documentation/text' relative to the script location.

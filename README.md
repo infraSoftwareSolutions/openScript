@@ -1,8 +1,8 @@
-# strideKit
+# openScript
 
 ![logo](Documentation/logo.png)
 
-**strideKit** is a collection of modules and libraries for both **PowerShell** and **Bash**, designed to simplify and automate common development tasks.
+**openScript** is a collection of modules and libraries for both **PowerShell** and **Bash**, designed to simplify and automate common development tasks.
 
 The toolkit provides practical utilities for:
 
@@ -15,7 +15,7 @@ The toolkit provides practical utilities for:
 
 ## Philosophy
 
-The primary goal of **strideKit** is not to replace existing tools, but to provide a simple and practical layer that accelerates everyday workflows without unnecessary complexity.
+The primary goal of **openScript** is not to replace existing tools, but to provide a simple and practical layer that accelerates everyday workflows without unnecessary complexity.
 
 The project focuses on:
 
@@ -37,4 +37,4 @@ The project focuses on:
 
 ## Vision
 
-strideKit aims to provide developers with a set of reusable tools that make common tasks faster and easier while maintaining a straightforward and flexible workflow.
+openScript aims to provide developers with a set of reusable tools that make common tasks faster and easier while maintaining a straightforward and flexible workflow.
