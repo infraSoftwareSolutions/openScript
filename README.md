@@ -1,6 +1,6 @@
 # openScript
 
-![logo](Documentation/logo.png)
+![logo](Documentation/logo.jpg)
 
 **openScript** is a collection of modules and libraries for both **PowerShell** and **Bash**, designed to simplify and automate common development tasks.
 
